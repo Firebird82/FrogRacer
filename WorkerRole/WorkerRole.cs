@@ -9,6 +9,8 @@ using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.Diagnostics;
 using Microsoft.WindowsAzure.ServiceRuntime;
 using Microsoft.WindowsAzure.Storage;
+using Microsoft.ServiceBus;
+using Microsoft.ServiceBus.Messaging;
 
 namespace WorkerRole
 {
@@ -16,6 +18,9 @@ namespace WorkerRole
     {
         private readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
         private readonly ManualResetEvent runCompleteEvent = new ManualResetEvent(false);
+
+        string connectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
+        string qname = "frogracingqueue";
 
         public override void Run()
         {
@@ -65,6 +70,27 @@ namespace WorkerRole
             {
                 Trace.TraceInformation("Working");
                 await Task.Delay(1000);
+
+                //Skapa ny Queueclient
+                QueueClient qc = QueueClient.CreateFromConnectionString(connectionString, qname);
+
+                //Ta emot det meddelande som kommer från web role.                
+                BrokeredMessage msg = qc.Receive();
+
+                if (msg != null)
+                {
+                    try
+                    {
+                        Trace.WriteLine("New Signup processed: " + msg.Properties["userName"]);
+                        msg.Complete();
+
+                    }
+                    catch (Exception)
+                    {
+                        // Problem, lås upp message i queue
+                        msg.Abandon();
+                    }
+                }
             }
         }
     }

@@ -2,10 +2,14 @@
 <ServiceConfiguration serviceName="FrogRacer.Azure" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" osFamily="4" osVersion="*" schemaVersion="2014-06.2.4">
   <Role name="FrogRacer">
     <Instances count="1" />
-    <ConfigurationSettings />
+    <ConfigurationSettings>
+      <Setting name="Microsoft.ServiceBus.ConnectionString" value="Endpoint=sb://frogracingqueue-ns.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=HDuCd4Mx/poC7s6045/THakPpEYc28N2/nWczq2e5Qc=" />
+    </ConfigurationSettings>
   </Role>
   <Role name="WorkerRole">
     <Instances count="1" />
-    <ConfigurationSettings />
+    <ConfigurationSettings>
+      <Setting name="Microsoft.ServiceBus.ConnectionString" value="Endpoint=sb://frogracingqueue-ns.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=HDuCd4Mx/poC7s6045/THakPpEYc28N2/nWczq2e5Qc=" />
+    </ConfigurationSettings>
   </Role>
 </ServiceConfiguration>
