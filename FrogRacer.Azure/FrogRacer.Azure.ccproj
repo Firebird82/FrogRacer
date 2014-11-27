@@ -54,6 +54,7 @@
     <DiagnosticsConfiguration Include="FrogRacerContent\diagnostics.wadcfgx" />
   </ItemGroup>
   <ItemGroup>
+    <PublishProfile Include="Profiles\frogracer2Production.azurePubxml" />
     <PublishProfile Include="Profiles\FrogRacerProduction.azurePubxml" />
   </ItemGroup>
   <!-- Import the target files for this project template -->
