@@ -16,15 +16,23 @@ namespace FrogRacer.Controllers
         string connectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
         string qname = "frogracingqueue";
 
-
         public ActionResult Index()
         {
             return View();
         }
 
-
         public ActionResult SignUp(string userName)
         {
+            if (userName != null)
+            {
+                Session["UserName"] = userName;
+
+                string user = (string)Session["UserName"];
+            }
+            else
+            {
+                return View("SignUp");
+            }
 
             var nm = NamespaceManager.CreateFromConnectionString(connectionString);
             QueueDescription qd = new QueueDescription(qname);
