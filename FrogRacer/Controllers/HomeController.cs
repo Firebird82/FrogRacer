@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Microsoft.WindowsAzure;
 using Microsoft.ServiceBus;
 using Microsoft.ServiceBus.Messaging;
+using WorkerRole;
 
 namespace FrogRacer.Controllers
 {
@@ -22,9 +23,10 @@ namespace FrogRacer.Controllers
             return View();
         }
 
-
+        
         public ActionResult SignUp(string userName)
         {
+            User _user = new User(userName);
 
             var nm = NamespaceManager.CreateFromConnectionString(connectionString);
             QueueDescription qd = new QueueDescription(qname);
@@ -43,8 +45,11 @@ namespace FrogRacer.Controllers
 
             //Skapa msg med email properaty och skicka till QueueClient
             var bm = new BrokeredMessage();
-            bm.Properties["userName"] = userName;
+            bm.Properties["userName"] = _user.UserName;
+            bm.Properties["balance"] = _user.Balance;
             qc.Send(bm);
+
+            ViewBag.message ="Hej " + _user.UserName + ".Du har ett välkomstslado på "+ _user.Balance;
 
             return View("Betting");
         }
