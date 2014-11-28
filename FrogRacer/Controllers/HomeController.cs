@@ -12,7 +12,6 @@ namespace FrogRacer.Controllers
 {
     public class HomeController : Controller
     {
-
         //Här hämtar vi ut den connectionstring vi precis har ställt in i våra roles.
         string connectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
         string qname = "frogracingqueue";
@@ -22,11 +21,8 @@ namespace FrogRacer.Controllers
             return View();
         }
 
-      
         public ActionResult SignUp(string userName)
         {
-            User _user = new User(userName);
-
             if (string.IsNullOrEmpty(userName))
             {
                 return View("SignUp");
@@ -34,8 +30,7 @@ namespace FrogRacer.Controllers
             else
             {
                 Session["UserName"] = userName;
-
-                string user = (string)Session["UserName"];
+                //string user = (string)Session["UserName"];
 
                 var nm = NamespaceManager.CreateFromConnectionString(connectionString);
                 QueueDescription qd = new QueueDescription(qname);
@@ -54,13 +49,22 @@ namespace FrogRacer.Controllers
 
                 //Skapa msg med email properaty och skicka till QueueClient
                 var bm = new BrokeredMessage();
+
+                User _user = new User(userName);
+
                 bm.Properties["userName"] = _user.UserName;
                 bm.Properties["balance"] = _user.Balance;
                 qc.Send(bm);
 
                 ViewBag.message = "Hej " + _user.UserName + ".Du har ett välkomstslado på " + _user.Balance;
 
-                return View("Betting");
+
+                var frogData = new FrogData();
+                var frogList = frogData.GetFrogList();
+
+                ViewBag.frogList = frogList;
+
+                return View("Betting", frogList);
             }
 
         }
