@@ -62,6 +62,8 @@ namespace FrogRacer.Controllers
                 var frogData = new FrogData();
                 var frogList = frogData.GetFrogList();
 
+
+
                 ViewBag.frogList = frogList;
 
                 return View("Betting", frogList);
