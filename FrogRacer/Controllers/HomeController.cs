@@ -56,8 +56,8 @@ namespace FrogRacer.Controllers
                 bm.Properties["balance"] = _user.Balance;
                 qc.Send(bm);
 
-                ViewBag.message = "Hello " + _user.UserName + ", Welcome to BadFrog Racing! You're welcome balance is " + _user.Balance
-                    +". Good luck at the racetrack!";
+                ViewBag.message = "Hej " + _user.UserName + ".Du har ett välkomstsaldo på " + _user.Balance;
+
 
                 var frogData = new FrogData();
                 var frogList = frogData.GetFrogList();
