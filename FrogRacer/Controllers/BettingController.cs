@@ -8,6 +8,11 @@ namespace FrogRacer.Controllers
 {
     public class BettingController : Controller
     {
+        public ActionResult CalculateFrogRace(string frog1)
+        {
+            return View("Result");
+        }
+
         // GET: Betting
         public ActionResult Index()
         {

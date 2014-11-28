@@ -21,7 +21,7 @@ namespace FrogRacer.Controllers
             return View();
         }
 
-        public ActionResult SignUp(string userName, int? frog1)
+        public ActionResult SignUp(string userName)
         {
             if (string.IsNullOrEmpty(userName))
             {
