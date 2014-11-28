@@ -11,6 +11,7 @@ using Microsoft.WindowsAzure.ServiceRuntime;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.ServiceBus;
 using Microsoft.ServiceBus.Messaging;
+using Microsoft.WindowsAzure.Storage.Table;
 
 namespace WorkerRole
 {
@@ -21,6 +22,8 @@ namespace WorkerRole
 
         string connectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
         string qname = "frogracingqueue";
+
+        string tableConnectionString = CloudConfigurationManager.GetSetting("TableStorageConnection");
 
         public override void Run()
         {
@@ -84,6 +87,8 @@ namespace WorkerRole
                         Trace.WriteLine("New Signup processed: " + msg.Properties["userName"]);
                         msg.Complete();
 
+                        SaveToStorage(msg.Properties["userName"].ToString());
+
                     }
                     catch (Exception)
                     {
@@ -92,6 +97,30 @@ namespace WorkerRole
                     }
                 }
             }
+        }
+
+        private void SaveToStorage(string username)
+        {
+            //det namn vår table ska ha
+            string tableName = "users";
+            //Connection till table storage account
+            CloudStorageAccount account = CloudStorageAccount.Parse(tableConnectionString);
+            //Klient för table storage
+            CloudTableClient tableStorage = account.CreateCloudTableClient();
+            //Hämta en reference till tablen, om inte finns, skapa table
+            CloudTable table = tableStorage.GetTableReference(tableName);
+            table.CreateIfNotExists();
+
+            //Skapar den entitet som ska in i storage
+            User user = new User(username);
+            
+            user.UserName = username;
+
+            //Sparar personen i signups table
+            TableOperation insertOperation = TableOperation.Insert(user);
+            table.Execute(insertOperation);
+
+
         }
     }
 }

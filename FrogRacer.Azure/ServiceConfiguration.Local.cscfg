@@ -10,6 +10,7 @@
     <Instances count="1" />
     <ConfigurationSettings>
       <Setting name="Microsoft.ServiceBus.ConnectionString" value="Endpoint=sb://frogracingqueue-ns.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=HDuCd4Mx/poC7s6045/THakPpEYc28N2/nWczq2e5Qc=" />
+      <Setting name="TableStorageConnection" value="DefaultEndpointsProtocol=https;AccountName=frogracer2;AccountKey=nrwjkPilxxFmrAZUwjBrCcsMsb1ha6pqc+EBI7mYMzKNPBeT8FiSZiHnzj7g+QqksUzC2GrVlYPIs3Zq3bxorQ==" />
     </ConfigurationSettings>
   </Role>
 </ServiceConfiguration>
