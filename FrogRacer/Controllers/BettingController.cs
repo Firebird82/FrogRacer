@@ -19,7 +19,7 @@ namespace FrogRacer.Controllers
             var winnerFrogsNumber = rnd.Next(0,lineUpFrogs.Count);
             var winnerFrog = lineUpFrogs[winnerFrogsNumber];
 
-            ViewBag.winnerFrog = winnerFrog;
+            ViewBag.winnerFrog = winnerFrog;           
             return View("Result", winnerFrog);
         }
 
