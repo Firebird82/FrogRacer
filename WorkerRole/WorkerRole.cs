@@ -79,6 +79,7 @@ namespace WorkerRole
 
                 //Ta emot det meddelande som kommer från web role.                
                 BrokeredMessage msg = qc.Receive();
+                BrokeredMessage updateSaldoMsg = qc.Receive();
 
                 if (msg != null)
                 {
@@ -94,6 +95,22 @@ namespace WorkerRole
                     {
                         // Problem, lås upp message i queue
                         msg.Abandon();
+                    }
+                }
+                else if (updateSaldoMsg != null)
+                {
+                    try
+                    {
+                        Trace.WriteLine("New balance processed: " + updateSaldoMsg.Properties["balance"]);
+                        updateSaldoMsg.Complete();
+
+                        UpdateToStorage(updateSaldoMsg.Properties["balance"].ToString(),updateSaldoMsg.Properties["userName"].ToString());
+
+                    }
+                    catch (Exception)
+                    {
+                        // Problem, lås upp message i queue
+                        updateSaldoMsg.Abandon();
                     }
                 }
             }
@@ -119,8 +136,46 @@ namespace WorkerRole
             //Sparar personen i signups table
             TableOperation insertOperation = TableOperation.Insert(user);
             table.Execute(insertOperation);
+        }
 
+        private void UpdateToStorage(string balance, string userName)
+        {
+            //det namn vår table ska ha
+            string tableName = "users";
 
+            //Connection till table storage account
+            CloudStorageAccount account = CloudStorageAccount.Parse(tableConnectionString);
+            //Klient för table storage
+            CloudTableClient tableStorage = account.CreateCloudTableClient();
+            //Hämta en reference till tablen, om inte finns, skapa table
+            CloudTable table = tableStorage.GetTableReference(tableName);
+            table.CreateIfNotExists();
+
+            // Create a retrieve operation that takes a customer entity.
+            TableOperation retrieveOperation = TableOperation.Retrieve<User>(userName,balance);
+
+            // Execute the operation.
+            TableResult retrievedResult = table.Execute(retrieveOperation);
+
+            // Assign the result to a CustomerEntity object.
+            User updateEntity = (User)retrievedResult.Result;
+
+            if (updateEntity != null)
+            {
+                
+                updateEntity.Balance = 100 ;
+
+                // Create the InsertOrReplace TableOperation
+                TableOperation insertOrReplaceOperation = TableOperation.InsertOrReplace(updateEntity);
+
+                // Execute the operation.
+                table.Execute(insertOrReplaceOperation);
+
+            }
+
+            //Sparar personen i signups table
+            //TableOperation insertOperation = TableOperation.Insert(balance);
+            //table.Execute(insertOperation);
         }
     }
 }

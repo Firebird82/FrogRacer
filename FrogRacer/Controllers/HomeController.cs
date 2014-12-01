@@ -33,6 +33,8 @@ namespace FrogRacer.Controllers
             {
                 Session["UserName"] = userName;
                 //string user = (string)Session["UserName"];
+                
+                User user = new User(userName);
 
                 var nm = NamespaceManager.CreateFromConnectionString(connectionString);
                 QueueDescription qd = new QueueDescription(qname);
@@ -51,8 +53,7 @@ namespace FrogRacer.Controllers
 
                 //Skapa msg med email properaty och skicka till QueueClient
                 var bm = new BrokeredMessage();
-
-                User _user = new User(userName);
+               
 
                 //TODO Hämta saldo från Storage start
 
@@ -60,13 +61,13 @@ namespace FrogRacer.Controllers
 
                 //Hämta saldo från Storage slut
 
-                Session["balance"] = _user.Balance;
+                Session["balance"] = user.Balance;
 
-                bm.Properties["userName"] = _user.UserName;
-                bm.Properties["balance"] = _user.Balance;
+                bm.Properties["userName"] = user.UserName;
+                bm.Properties["balance"] = user.Balance;
                 qc.Send(bm);
 
-                ViewBag.message = "Hej " + _user.UserName + ".Du har ett välkomstsaldo på " + _user.Balance;
+                ViewBag.message = "Hej " + user.UserName + ".Du har ett välkomstsaldo på " + user.Balance;
 
                 var frogData = new FrogData();
                 var frogList = frogData.GetFrogList();

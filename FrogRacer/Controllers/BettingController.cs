@@ -68,14 +68,23 @@ namespace FrogRacer.Controllers
                 nm.CreateQueue(qd);
             }
 
+            //newBalance = 100;
+
             //Skicka till queue med hjälp av den connectionstring vi tidigare ställt in i configen
             QueueClient qc = QueueClient.CreateFromConnectionString(connectionString, qname);
+
+            User user = new User(Session["UserName"].ToString());
+            //User user = (User)Session["UserName"];
+            
+            //Anv. nya saldo 
+            user.Balance += newBalance; // <-- Save newBalance to storage and remove this line
 
             //Skapa msg med email properaty och skicka till QueueClient           
             var updateSaldoMsg = new BrokeredMessage();
 
-            newBalance += 1; // <-- Save newBalance to storage and remove this line
-
+            updateSaldoMsg.Properties["userName"] = user.UserName;
+            updateSaldoMsg.Properties["balance"] = user.Balance;
+            
             //Storage - Slut
 
             return View("Result", winnerFrog);
