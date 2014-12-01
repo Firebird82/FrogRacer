@@ -5,18 +5,29 @@
     ViewBag.Title = "Betting";   
 }
 
-<div>@ViewBag.message <br /></div>
+@ViewBag.message <br />
 
-<div class="form-horizontal">  @*<--- ändra tillbaka till row*@
-    <form action="/Betting/CalculateFrogRace" method="post" modell="Frogs">
+<div class="row">
+    <form action="/Betting/CalculateFrogRace" method="post">
+
+        @{
+            int frogLoopCount = 0;
+
+            List<string> frogNameList = new List<string>();
+            frogNameList.Add("frog1");
+            frogNameList.Add("frog2");
+            frogNameList.Add("frog3");
+            frogNameList.Add("frog4");
+            frogNameList.Add("frog5");
+        }
+
         @foreach (var frog in ViewBag.frogList)
         {
-            <div class="col-md-4">
-                @frog.Name<br />
-                <img src="~/Content/Images/@frog.ImageName" width="200">
-                <input type="text" name="frog1"><br>
-                <br />
-            </div>
+            @frog.Name<br />
+            <img src="~/Content/Images/@frog.ImageName" width="200">
+            <input type="text" name="@frogNameList[frogLoopCount]"><br>
+            <br />
+            frogLoopCount++;
         }
         <div class="col-md-8">
         <input type="submit" value="Race!" />
