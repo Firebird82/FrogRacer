@@ -8,7 +8,7 @@ namespace FrogRacer.Controllers
 {
     public class BettingController : Controller
     {
-        public ActionResult CalculateFrogRace(string frog1)
+        public ActionResult CalculateFrogRace(int? frog1, int? frog2, int? frog3, int? frog4, int? frog5)
         {
             return View("Result");
         }
