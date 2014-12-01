@@ -1,22 +1,26 @@
-﻿<h2>Betting</h2>
+﻿@using FrogRacer.Models
+<h2>Betting</h2>
 
 @{
     ViewBag.Title = "Betting";   
 }
 
+<div>@ViewBag.message <br /></div>
 
-@ViewBag.message <br />
-
-<div class="row">
-    <form action="/Betting/CalculateFrogRace" method="post">
+<div class="form-horizontal">  @*<--- ändra tillbaka till row*@
+    <form action="/Betting/CalculateFrogRace" method="post" modell="Frogs">
         @foreach (var frog in ViewBag.frogList)
         {
-            @frog.Name<br />
-            <img src="~/Content/Images/@frog.ImageName" width="200">
-            <input type="text" name="frog1"><br>
-            <br />
+            <div class="col-md-4">
+                @frog.Name<br />
+                <img src="~/Content/Images/@frog.ImageName" width="200">
+                <input type="text" name="frog1"><br>
+                <br />
+            </div>
         }
-        <input type="submit" value="Singup" />
-    </form>
+        <div class="col-md-8">
+        <input type="submit" value="Race!" />
+        </div>
+</form>
 </div>
 

@@ -9,7 +9,6 @@ namespace FrogRacer
     public class FrogData
     {
         
-
         public List<Frog> GetFrogList()
         {               
             List<Frog> frogList = new List<Frog>(); 

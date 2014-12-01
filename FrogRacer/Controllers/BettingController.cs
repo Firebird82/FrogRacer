@@ -3,14 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using FrogRacer.Models;
 
 namespace FrogRacer.Controllers
 {
     public class BettingController : Controller
     {
-        public ActionResult CalculateFrogRace(string frog1)
+        public ActionResult CalculateFrogRace()
         {
-            return View("Result");
+            List<Frog> lineUpFrogs = (List<Frog>)Session["frogList"];
+
+            Random rnd = new Random();
+
+            var winnerFrogsNumber = rnd.Next(0,lineUpFrogs.Count);
+            var winnerFrog = lineUpFrogs[winnerFrogsNumber];
+
+            ViewBag.winnerFrog = winnerFrog;
+            return View("Result", winnerFrog);
         }
 
         // GET: Betting

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using FrogRacer.Models;
+using Microsoft.Ajax.Utilities;
 using Microsoft.WindowsAzure;
 using Microsoft.ServiceBus;
 using Microsoft.ServiceBus.Messaging;
@@ -58,11 +60,10 @@ namespace FrogRacer.Controllers
 
                 ViewBag.message = "Hej " + _user.UserName + ".Du har ett välkomstsaldo på " + _user.Balance;
 
-
                 var frogData = new FrogData();
                 var frogList = frogData.GetFrogList();
 
-
+                Session["frogList"] = frogList;
 
                 ViewBag.frogList = frogList;
 
@@ -70,5 +71,7 @@ namespace FrogRacer.Controllers
             }
 
         }
+
+      
     }
 }
