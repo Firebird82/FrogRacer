@@ -97,7 +97,7 @@ namespace WorkerRole
                         msg.Abandon();
                     }
                 }
-                else if (updateSaldoMsg != null)
+                if (updateSaldoMsg != null)
                 {
                     try
                     {
@@ -129,8 +129,7 @@ namespace WorkerRole
             table.CreateIfNotExists();
 
             //Skapar den entitet som ska in i storage
-            User user = new User(username);
-            
+            User user = new User(username);           
             user.UserName = username;
 
             //Sparar personen i signups table
@@ -150,9 +149,10 @@ namespace WorkerRole
             //Hämta en reference till tablen, om inte finns, skapa table
             CloudTable table = tableStorage.GetTableReference(tableName);
             table.CreateIfNotExists();
-
+            
+            //HÄMTA RÄTT uSER!
             // Create a retrieve operation that takes a customer entity.
-            TableOperation retrieveOperation = TableOperation.Retrieve<User>(userName,balance);
+            TableOperation retrieveOperation = TableOperation.Retrieve<User>("users",userName);
 
             // Execute the operation.
             TableResult retrievedResult = table.Execute(retrieveOperation);
@@ -161,20 +161,17 @@ namespace WorkerRole
             User updateEntity = (User)retrievedResult.Result;
 
             if (updateEntity != null)
-            {
-                
-                updateEntity.Balance = 100 ;
+            {                
+                updateEntity.Balance = Int32.Parse(balance);
 
                 // Create the InsertOrReplace TableOperation
                 TableOperation insertOrReplaceOperation = TableOperation.InsertOrReplace(updateEntity);
 
                 // Execute the operation.
                 table.Execute(insertOrReplaceOperation);
-
             }
 
             //Sparar personen i signups table
-            //TableOperation insertOperation = TableOperation.Insert(balance);
             //table.Execute(insertOperation);
         }
     }
