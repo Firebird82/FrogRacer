@@ -1,0 +1,18 @@
+﻿
+@{
+    ViewBag.Title = "ResultView";
+}
+
+<h2>ResultView</h2>
+<div class="row">
+    <form>          
+    @foreach (var frog in @ViewBag.winnerFrog)
+        {
+            @frog.Name<br />
+            <img src="~/Content/Images/@frog.ImageName" width="200">
+            <input type="text" name="frog1"><br>
+            <br />
+        }
+    </form>
+</div>
+
