@@ -10,7 +10,6 @@ namespace FrogRacer.Controllers
     public class BettingController : Controller
     {
         public ActionResult CalculateFrogRace(int? frog1, int? frog2, int? frog3, int? frog4, int? frog5)
-
         {
             List<Frog> lineUpFrogs = (List<Frog>)Session["frogList"];
 
@@ -20,6 +19,21 @@ namespace FrogRacer.Controllers
             var winnerFrog = lineUpFrogs[winnerFrogsNumber];
 
             ViewBag.winnerFrog = winnerFrog;
+
+            //Beräkna Saldo - Start
+
+            int newBalance = 2000;
+
+            //Beräkna Saldo - Slut
+
+
+
+            //Storage - Spara saldo börjar här
+
+            newBalance += 1; // <-- Save newBalance to storage and remove this line
+
+            //Storage - Slut
+
             return View("Result", winnerFrog);
         }
 
