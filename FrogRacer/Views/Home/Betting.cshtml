@@ -1,9 +1,4 @@
-﻿<h2>Betting</h2>
-
-@{
-    ViewBag.Title = "Betting";   
-}
-
+﻿Betting
 
 @ViewBag.message <br />
 
@@ -23,13 +18,28 @@
 
         @foreach (var frog in ViewBag.frogList)
         {
-            @frog.Name<br />
-            <img src="~/Content/Images/@frog.ImageName" width="200">
-            <input type="text" name="@frogNameList[frogLoopCount]"><br>
-            <br />
+            <div class="row">
+                <div class="col-md-2">
+                    <br /><br />
+                    @frog.Name
+                </div>
+
+                <div class="col-md-3">
+                    <img src="~/Content/Images/@frog.ImageName" width="200">
+                </div>
+
+                <div class="col-md-2">
+                    <br/><br />
+                    <input type="text" name="@frogNameList[frogLoopCount]">
+                </div>
+            </div>
             frogLoopCount++;
         }
-        <input type="submit" value="Singup" />
+
+        <div class="row">
+            <div class="col-md-7">
+                <input type="submit" value="Betta" class="pull-right"/>
+            </div>
+        </div>
     </form>
 </div>
-
