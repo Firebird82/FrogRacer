@@ -1,12 +1,17 @@
-﻿
-@{
-    ViewBag.Title = "Result";
-}
-
-<h2>Result</h2>
+﻿<h2>Race Result</h2>
 
 <form>
-        @ViewBag.winnerFrog.Name is the winner!<br />
-        <img src="~/Content/Images/@ViewBag.winnerFrog.ImageName" width="200">
-        <br />
+    @ViewBag.winnerFrog.Name is the winner!<br />
+    @ViewBag.ResultMessage<br />
+
+    <img src="~/Content/Images/@ViewBag.winnerFrog.ImageName" width="200">
+    <br />
+
+    <div class="row">
+        <div class="col-md-4">
+            <br />
+            @*@Html.ActionLink("Test Link", "Betting", "Home", new { userName = "David" })*@
+            <a href="http://localhost:64708/Home/SignUp?userName=@ViewBag.resultUserName" >Länk</a>
+        </div>
+    </div>
 </form>

@@ -41,20 +41,34 @@ namespace FrogRacer.Controllers
                 bettingsList.Add(frog4);
                 bettingsList.Add(frog5);
 
+                bool bettedOnWinningFrog = false;
+                int winningSum = 0;
+                int losingSum = 0;
+                ViewBag.resultUserName = (string)Session["UserName"];
+
                 for (int i = 0; i < lineUpFrogs.Count; i++)
                 {
                     if (i == winnerFrogsNumber && bettingsList[winnerFrogsNumber] != null)
                     {
                         newBalance += (int)bettingsList[winnerFrogsNumber] * 2;
+                        winningSum = (int)bettingsList[winnerFrogsNumber] * 2;
+                        bettedOnWinningFrog = true;
                     }
-                    else
-                    {
-                        if (bettingsList[i] != null)
-	                    {
-                            newBalance -= (int)bettingsList[i];
-	                    }
-                        
-                    }
+
+                    if (bettingsList[i] != null)
+	                {
+                        newBalance -= (int)bettingsList[i];
+                        losingSum -= (int)bettingsList[i];
+	                }
+                }
+
+                if (bettedOnWinningFrog == true)
+                {
+                    ViewBag.ResultMessage = "Yay, you have won " + winningSum + " and you now have " + newBalance + " left.";
+                }
+                else
+                {
+                    ViewBag.ResultMessage = "Oh no, you have lost " + losingSum + " and you now have " + newBalance + " left.";
                 }
             }
 
