@@ -54,6 +54,14 @@ namespace FrogRacer.Controllers
 
                 User _user = new User(userName);
 
+                //TODO Hämta saldo från Storage start
+
+                //Om användaren inte finns i storage får den 1000
+
+                //Hämta saldo från Storage slut
+
+                Session["balance"] = _user.Balance;
+
                 bm.Properties["userName"] = _user.UserName;
                 bm.Properties["balance"] = _user.Balance;
                 qc.Send(bm);

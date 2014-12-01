@@ -20,13 +20,35 @@ namespace FrogRacer.Controllers
 
             ViewBag.winnerFrog = winnerFrog;
 
-            //Beräkna Saldo - Start
+            int newBalance = 0;
 
-            int newBalance = 2000;
+            if (frog1 != null && frog2 != null && frog3 != null && frog4 != null && frog5 != null)
+            {
+                newBalance = (int)Session["balance"];
 
-            //Beräkna Saldo - Slut
+                List<int?> bettingsList = new List<int?>();
+                bettingsList.Add(frog1);
+                bettingsList.Add(frog2);
+                bettingsList.Add(frog3);
+                bettingsList.Add(frog4);
+                bettingsList.Add(frog5);
 
-
+                for (int i = 0; i < lineUpFrogs.Count; i++)
+                {
+                    if (i == winnerFrogsNumber && bettingsList[winnerFrogsNumber] != null)
+                    {
+                        newBalance += (int)bettingsList[winnerFrogsNumber] * 2;
+                    }
+                    else
+                    {
+                        if (bettingsList[i] != null)
+	                    {
+                            newBalance -= (int)bettingsList[i];
+	                    }
+                        
+                    }
+                }
+            }
 
             //Storage - Spara saldo börjar här
 
