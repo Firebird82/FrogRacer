@@ -4,11 +4,19 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using FrogRacer.Models;
+using Microsoft.WindowsAzure;
+using Microsoft.ServiceBus;
+using Microsoft.ServiceBus.Messaging;
+using WorkerRole;
 
 namespace FrogRacer.Controllers
 {
     public class BettingController : Controller
     {
+        string connectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
+        string qname = "frogracingqueue";
+        
+
         public ActionResult CalculateFrogRace(int? frog1, int? frog2, int? frog3, int? frog4, int? frog5)
         {
             List<Frog> lineUpFrogs = (List<Frog>)Session["frogList"];
@@ -51,6 +59,20 @@ namespace FrogRacer.Controllers
             }
 
             //Storage - Spara saldo börjar här
+
+            var nm = NamespaceManager.CreateFromConnectionString(connectionString);
+            QueueDescription qd = new QueueDescription(qname);         
+
+            if (!nm.QueueExists(qname))
+            {
+                nm.CreateQueue(qd);
+            }
+
+            //Skicka till queue med hjälp av den connectionstring vi tidigare ställt in i configen
+            QueueClient qc = QueueClient.CreateFromConnectionString(connectionString, qname);
+
+            //Skapa msg med email properaty och skicka till QueueClient           
+            var updateSaldoMsg = new BrokeredMessage();
 
             newBalance += 1; // <-- Save newBalance to storage and remove this line
 
