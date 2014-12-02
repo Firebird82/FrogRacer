@@ -19,11 +19,13 @@ namespace FrogRacer.Controllers
 
         public ActionResult CalculateFrogRace(int? frog1, int? frog2, int? frog3, int? frog4, int? frog5)
         {
+            string userSession = (string)Session["UserName"];
+
             List<Frog> lineUpFrogs = (List<Frog>)Session["frogList"];
 
             Random rnd = new Random();
 
-            var winnerFrogsNumber = rnd.Next(0,lineUpFrogs.Count);
+            var winnerFrogsNumber = rnd.Next(0, lineUpFrogs.Count);
             var winnerFrog = lineUpFrogs[winnerFrogsNumber];
 
             ViewBag.winnerFrog = winnerFrog;
@@ -44,7 +46,7 @@ namespace FrogRacer.Controllers
                 bool bettedOnWinningFrog = false;
                 int winningSum = 0;
                 int losingSum = 0;
-                ViewBag.resultUserName = (string)Session["UserName"];
+                ViewBag.resultUserName = userSession;
 
                 for (int i = 0; i < lineUpFrogs.Count; i++)
                 {
@@ -56,11 +58,13 @@ namespace FrogRacer.Controllers
                     }
 
                     if (bettingsList[i] != null)
-	                {
+                    {
                         newBalance -= (int)bettingsList[i];
                         losingSum -= (int)bettingsList[i];
-	                }
+                    }
                 }
+
+                Session["balance"] = newBalance;
 
                 if (bettedOnWinningFrog == true)
                 {
@@ -72,10 +76,17 @@ namespace FrogRacer.Controllers
                 }
             }
 
+            else
+            {
+                ViewBag.ErrorMessage = "You have to place a bet!";
+                return RedirectToAction( "SignUp","Home",new {userName=userSession});
+
+            }
+
             //Storage - Spara saldo börjar här
 
             var nm = NamespaceManager.CreateFromConnectionString(connectionString);
-            QueueDescription qd = new QueueDescription(qname);         
+            QueueDescription qd = new QueueDescription(qname);
 
             if (!nm.QueueExists(qname))
             {
@@ -86,8 +97,8 @@ namespace FrogRacer.Controllers
 
             User user = new User(Session["UserName"].ToString());
 
-            user.Balance = newBalance; 
-        
+            user.Balance = newBalance;
+
             var msg = new BrokeredMessage();
 
             msg.Properties["userName"] = user.UserName;

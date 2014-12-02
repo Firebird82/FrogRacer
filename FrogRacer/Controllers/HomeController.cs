@@ -33,13 +33,16 @@ namespace FrogRacer.Controllers
             {
                 Session["UserName"] = userName;
                 //string user = (string)Session["UserName"];
-                
+
                 User user = new User(userName);
 
                 //TODO Hämta saldo från Storage start
 
                 //Om användaren inte finns i storage får den 1000
-
+                if (Session["balance"] != null)
+                {
+                    user.Balance = (int)Session["balance"];
+                }
                 //Hämta saldo från Storage slut
 
                 var nm = NamespaceManager.CreateFromConnectionString(connectionString);
@@ -59,23 +62,14 @@ namespace FrogRacer.Controllers
 
                 //Skapa msg med email properaty och skicka till QueueClient
                 var bm = new BrokeredMessage();
-               
-                
+
                 Session["balance"] = user.Balance;
                 bm.Properties["userName"] = user.UserName;
                 bm.Properties["balance"] = user.Balance;
                 qc.Send(bm);
 
-                if (user.Balance == 1000)
-                {
-                    ViewBag.message = "Hello " + user.UserName + ".You have a welcome balance of " + user.Balance +
-                                      " USD to start with.";
-                }
-                else
-                {
-                    ViewBag.message = "Hello " + user.UserName + ".You have " + user.Balance +
-                                           " USD left. Let's play again";
-                }
+                ViewBag.message = "Hello " + user.UserName + ".You have a balance of " + user.Balance + " USD";
+
                 var frogData = new FrogData();
                 var frogList = frogData.GetFrogList();
 
@@ -85,7 +79,6 @@ namespace FrogRacer.Controllers
 
                 return View("Betting", frogList);
             }
-
         }
 
         public ActionResult RemoveUser()
@@ -93,5 +86,6 @@ namespace FrogRacer.Controllers
 
             return View("RemoveUser");
         }
+
     }
 }
