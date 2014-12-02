@@ -2,16 +2,22 @@
 
 <form>
     @ViewBag.winnerFrog.Name is the winner!<br />
-    @ViewBag.ResultMessage<br />
+    @ViewBag.ResultMessage<br /><br /><br />
 
     <img src="~/Content/Images/@ViewBag.winnerFrog.ImageName" width="200">
-    <br />
+    <br /><br />
 
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-2">
             <br />
             @*@Html.ActionLink("Test Link", "Betting", "Home", new { userName = "David" })*@
-            <a href="http://localhost:64708/Home/SignUp?userName=@ViewBag.resultUserName" >Race Again!</a>
+            <a href="http://localhost:64708/Home/RemoveUser">Quit!</a>
+        </div>
+
+        <div class="col-md-4 pull">
+            <br />
+            @*@Html.ActionLink("Test Link", "Betting", "Home", new { userName = "David" })*@
+            <a href="http://localhost:64708/Home/SignUp?userName=@ViewBag.resultUserName">Race Again!</a>
         </div>
     </div>
 </form>

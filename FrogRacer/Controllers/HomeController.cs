@@ -88,6 +88,10 @@ namespace FrogRacer.Controllers
 
         }
 
-      
+        public ActionResult RemoveUser()
+        {
+
+            return View("RemoveUser");
+        }
     }
 }

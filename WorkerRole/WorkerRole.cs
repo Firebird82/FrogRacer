@@ -33,6 +33,9 @@ namespace WorkerRole
             {
                 this.RunAsync(this.cancellationTokenSource.Token).Wait();
             }
+            catch (Exception e)
+            { 
+            }
             finally
             {
                 this.runCompleteEvent.Set();
