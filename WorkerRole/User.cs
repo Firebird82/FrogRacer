@@ -18,9 +18,18 @@ namespace WorkerRole
         {           
             UserName = userName;
             Balance = 1000;
-            this.PartitionKey = "users";
-            this.RowKey = UserName;
+            PartitionKey = "users";
+            RowKey = UserName;
         }
+
+        public User()
+        {
+        }
+        
+
+
+
+
     }
 
 

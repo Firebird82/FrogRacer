@@ -30,7 +30,7 @@ namespace FrogRacer.Controllers
 
             int newBalance = 0;
 
-            if (frog1 != null && frog2 != null && frog3 != null && frog4 != null && frog5 != null)
+            if (frog1 != null || frog2 != null || frog3 != null || frog4 != null || frog5 != null)
             {
                 newBalance = (int)Session["balance"];
 
@@ -81,8 +81,6 @@ namespace FrogRacer.Controllers
             {
                 nm.CreateQueue(qd);
             }
-
-            //newBalance = 100;
 
             //Skicka till queue med hjälp av den connectionstring vi tidigare ställt in i configen
             QueueClient qc = QueueClient.CreateFromConnectionString(connectionString, qname);

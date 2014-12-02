@@ -153,7 +153,7 @@ namespace WorkerRole
             //HÄMTA RÄTT uSER!
             // Create a retrieve operation that takes a customer entity.
             TableOperation retrieveOperation = TableOperation.Retrieve<User>("users",userName);
-
+            
             // Execute the operation.
             TableResult retrievedResult = table.Execute(retrieveOperation);
 
@@ -165,14 +165,20 @@ namespace WorkerRole
                 updateEntity.Balance = Int32.Parse(balance);
 
                 // Create the InsertOrReplace TableOperation
-                TableOperation insertOrReplaceOperation = TableOperation.InsertOrReplace(updateEntity);
+                TableOperation insertOrReplaceOperation = TableOperation.Replace(updateEntity);
 
-                // Execute the operation.
-                table.Execute(insertOrReplaceOperation);
+                try
+                {
+                    // Execute the operation.
+                    table.Execute(insertOrReplaceOperation);
+                }
+                catch (Exception ex)
+                {
+                        
+                    throw;
+                }
+               
             }
-
-            //Sparar personen i signups table
-            //table.Execute(insertOperation);
         }
     }
 }
