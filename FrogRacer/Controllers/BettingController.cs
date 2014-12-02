@@ -82,102 +82,21 @@ namespace FrogRacer.Controllers
                 nm.CreateQueue(qd);
             }
 
-            //Skicka till queue med hjälp av den connectionstring vi tidigare ställt in i configen
             QueueClient qc = QueueClient.CreateFromConnectionString(connectionString, qname);
 
             User user = new User(Session["UserName"].ToString());
-            
-            //Anv. nya saldo 
-            user.Balance = newBalance; // <-- Save newBalance to storage and remove this line
 
-            //Skapa msg och skicka till QueueClient           
-            var updateSaldoMsg = new BrokeredMessage();
+            user.Balance = newBalance; 
+        
+            var msg = new BrokeredMessage();
 
-            updateSaldoMsg.Properties["userName"] = user.UserName;
-            updateSaldoMsg.Properties["balance"] = user.Balance;
+            msg.Properties["userName"] = user.UserName;
+            msg.Properties["balance"] = user.Balance;
 
-            qc.Send(updateSaldoMsg);
+            qc.Send(msg);
             //Storage - Slut
 
             return View("Result", winnerFrog);
-        }
-
-        // GET: Betting
-        public ActionResult Index()
-        {
-            return View();
-        }
-
-        // GET: Betting/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: Betting/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Betting/Create
-        [HttpPost]
-        public ActionResult Create(FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add insert logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: Betting/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: Betting/Edit/5
-        [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add update logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: Betting/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: Betting/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
         }
     }
 }

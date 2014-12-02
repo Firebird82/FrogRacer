@@ -60,14 +60,22 @@ namespace FrogRacer.Controllers
                 //Skapa msg med email properaty och skicka till QueueClient
                 var bm = new BrokeredMessage();
                
+                
                 Session["balance"] = user.Balance;
-
                 bm.Properties["userName"] = user.UserName;
                 bm.Properties["balance"] = user.Balance;
                 qc.Send(bm);
 
-                ViewBag.message = "Hello " + user.UserName + ".You have a welcome balance of " + user.Balance + " USD to start with.";
-
+                if (user.Balance == 1000)
+                {
+                    ViewBag.message = "Hello " + user.UserName + ".You have a welcome balance of " + user.Balance +
+                                      " USD to start with.";
+                }
+                else
+                {
+                    ViewBag.message = "Hello " + user.UserName + ".You have " + user.Balance +
+                                           " USD left. Let's play again";
+                }
                 var frogData = new FrogData();
                 var frogList = frogData.GetFrogList();
 
