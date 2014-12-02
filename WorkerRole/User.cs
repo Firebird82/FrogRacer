@@ -25,12 +25,5 @@ namespace WorkerRole
         public User()
         {
         }
-        
-
-
-
-
     }
-
-
 }

@@ -36,6 +36,12 @@ namespace FrogRacer.Controllers
                 
                 User user = new User(userName);
 
+                //TODO Hämta saldo från Storage start
+
+                //Om användaren inte finns i storage får den 1000
+
+                //Hämta saldo från Storage slut
+
                 var nm = NamespaceManager.CreateFromConnectionString(connectionString);
                 QueueDescription qd = new QueueDescription(qname);
                 //Ställ in Max size på queue på  2GB
@@ -54,13 +60,6 @@ namespace FrogRacer.Controllers
                 //Skapa msg med email properaty och skicka till QueueClient
                 var bm = new BrokeredMessage();
                
-
-                //TODO Hämta saldo från Storage start
-
-                //Om användaren inte finns i storage får den 1000
-
-                //Hämta saldo från Storage slut
-
                 Session["balance"] = user.Balance;
 
                 bm.Properties["userName"] = user.UserName;

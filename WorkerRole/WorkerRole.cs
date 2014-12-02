@@ -79,13 +79,13 @@ namespace WorkerRole
 
                 //Ta emot det meddelande som kommer från web role.                
                 BrokeredMessage msg = qc.Receive();
-                BrokeredMessage updateSaldoMsg = qc.Receive();
+                //BrokeredMessage updateSaldoMsg = qc.Receive();
 
-                if (msg != null)
+                if ((int)msg.Properties["balance"] == 1000)
                 {
                     try
                     {
-                        Trace.WriteLine("New Signup processed: " + msg.Properties["userName"]);
+                        Trace.WriteLine("New Signup processed: " + msg.Properties["userName"] + msg.Properties["balance"]);
                         msg.Complete();
 
                         SaveToStorage(msg.Properties["userName"].ToString());
@@ -97,22 +97,25 @@ namespace WorkerRole
                         msg.Abandon();
                     }
                 }
-                if (updateSaldoMsg != null)
+                else
                 {
                     try
                     {
-                        Trace.WriteLine("New balance processed: " + updateSaldoMsg.Properties["balance"]);
-                        updateSaldoMsg.Complete();
+                        Trace.WriteLine("New balance processed: " + msg.Properties["balance"]);
+                        msg.Complete();
 
-                        UpdateToStorage(updateSaldoMsg.Properties["balance"].ToString(),updateSaldoMsg.Properties["userName"].ToString());
+                        UpdateToStorage(msg.Properties["balance"].ToString(), msg.Properties["userName"].ToString());
 
                     }
                     catch (Exception)
                     {
                         // Problem, lås upp message i queue
-                        updateSaldoMsg.Abandon();
-                    }
+                        msg.Abandon();
+                    }     
                 }
+
+
+                
             }
         }
 
