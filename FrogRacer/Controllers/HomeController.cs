@@ -93,9 +93,10 @@ namespace FrogRacer.Controllers
         {
             List<Frog> lineUpFrogs = (List<Frog>)Session["frogList"];
             string user = (string)Session["UserName"];
+            int currentBalance = (int)Session["balance"];
 
             ViewBag.frogList = lineUpFrogs;
-            ViewBag.ErrorMessage = "You forgot to place a bet, try again " + user + ".";
+            ViewBag.ErrorMessage = "You forgot to place a bet, try again " + user + ". Your saldo is " + currentBalance;
 
             return View("Betting", lineUpFrogs);
         }
