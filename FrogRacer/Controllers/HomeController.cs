@@ -28,7 +28,8 @@ namespace FrogRacer.Controllers
         {
             if (string.IsNullOrEmpty(userName))
             {
-                return View("SignUp");
+                ViewBag.ErrorMessage = "You have to enter a name in the sign up box, stupid.";
+                return View("Index");
             }
             else
             {
@@ -88,7 +89,7 @@ namespace FrogRacer.Controllers
             return View("RemoveUser");
         }
 
-        public ActionResult UserLeftTxtBoxesEmpty(string userName)
+        public ActionResult UserLeftTxtBoxesEmpty()
         {
             List<Frog> lineUpFrogs = (List<Frog>)Session["frogList"];
             string user = (string)Session["UserName"];
