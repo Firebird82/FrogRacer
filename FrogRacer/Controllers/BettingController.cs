@@ -79,8 +79,7 @@ namespace FrogRacer.Controllers
             else
             {
                 ViewBag.ErrorMessage = "You have to place a bet!";
-                return RedirectToAction( "SignUp","Home",new {userName=userSession});
-
+                return RedirectToAction("UserLeftTxtBoxesEmpty", "Home", new { userName = userSession });
             }
 
             //Storage - Spara saldo börjar här
