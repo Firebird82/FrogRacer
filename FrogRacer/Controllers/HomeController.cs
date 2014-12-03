@@ -18,6 +18,7 @@ namespace FrogRacer.Controllers
         string connectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
         string qname = "frogracingqueue";
 
+
         public ActionResult Index()
         {
             return View();
@@ -27,7 +28,8 @@ namespace FrogRacer.Controllers
         {
             if (string.IsNullOrEmpty(userName))
             {
-                return View("SignUp");
+                ViewBag.ErrorMessage = "You have to enter a name in the sign up box, stupid.";
+                return View("Index");
             }
             else
             {
@@ -107,6 +109,18 @@ namespace FrogRacer.Controllers
             qc.Send(msg);
 
             return View("RemoveUser");
+        }
+
+        public ActionResult UserLeftTxtBoxesEmpty()
+        {
+            List<Frog> lineUpFrogs = (List<Frog>)Session["frogList"];
+            string user = (string)Session["UserName"];
+            int currentBalance = (int)Session["balance"];
+
+            ViewBag.frogList = lineUpFrogs;
+            ViewBag.ErrorMessage = "You forgot to place a bet, try again " + user + ". Your saldo is " + currentBalance;
+
+            return View("Betting", lineUpFrogs);
         }
 
     }
