@@ -66,6 +66,7 @@ namespace FrogRacer.Controllers
                 Session["balance"] = user.Balance;
                 bm.Properties["userName"] = user.UserName;
                 bm.Properties["balance"] = user.Balance;
+                bm.Properties["action"] = "create";
                 qc.Send(bm);
 
                 ViewBag.message = "Hello " + user.UserName + ".You have a balance of " + user.Balance + " USD";
@@ -83,6 +84,27 @@ namespace FrogRacer.Controllers
 
         public ActionResult RemoveUser()
         {
+            string connectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
+            string qname = "frogracingqueue";
+
+            var nm = NamespaceManager.CreateFromConnectionString(connectionString);
+            QueueDescription qd = new QueueDescription(qname);
+
+            if (!nm.QueueExists(qname))
+            {
+                nm.CreateQueue(qd);
+            }
+
+            QueueClient qc = QueueClient.CreateFromConnectionString(connectionString, qname);
+
+            User user = new User(Session["UserName"].ToString());
+
+            var msg = new BrokeredMessage();
+
+            msg.Properties["userName"] = user.UserName;
+            msg.Properties["balance"] = Session["balance"].ToString();
+            msg.Properties["action"] = "delete";
+            qc.Send(msg);
 
             return View("RemoveUser");
         }

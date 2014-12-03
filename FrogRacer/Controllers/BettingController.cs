@@ -13,10 +13,6 @@ namespace FrogRacer.Controllers
 {
     public class BettingController : Controller
     {
-        string connectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
-        string qname = "frogracingqueue";
-        
-
         public ActionResult CalculateFrogRace(int? frog1, int? frog2, int? frog3, int? frog4, int? frog5)
         {
             string userSession = (string)Session["UserName"];
@@ -80,10 +76,11 @@ namespace FrogRacer.Controllers
             {
                 ViewBag.ErrorMessage = "You have to place a bet!";
                 return RedirectToAction( "SignUp","Home",new {userName=userSession});
-
             }
 
             //Storage - Spara saldo börjar här
+            string connectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
+            string qname = "frogracingqueue";
 
             var nm = NamespaceManager.CreateFromConnectionString(connectionString);
             QueueDescription qd = new QueueDescription(qname);
@@ -103,7 +100,7 @@ namespace FrogRacer.Controllers
 
             msg.Properties["userName"] = user.UserName;
             msg.Properties["balance"] = user.Balance;
-
+            msg.Properties["action"] = "update";
             qc.Send(msg);
             //Storage - Slut
 

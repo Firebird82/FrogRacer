@@ -84,7 +84,7 @@ namespace WorkerRole
                 BrokeredMessage msg = qc.Receive();
                 //BrokeredMessage updateSaldoMsg = qc.Receive();
 
-                if ((int)msg.Properties["balance"] == 1000)
+                if (msg.Properties["action"].ToString() == "create")
                 {
                     try
                     {
@@ -92,7 +92,6 @@ namespace WorkerRole
                         msg.Complete();
 
                         SaveToStorage(msg.Properties["userName"].ToString());
-
                     }
                     catch (Exception)
                     {
@@ -100,7 +99,7 @@ namespace WorkerRole
                         msg.Abandon();
                     }
                 }
-                else
+                else if (msg.Properties["action"].ToString() == "update")
                 {
                     try
                     {
@@ -108,7 +107,6 @@ namespace WorkerRole
                         msg.Complete();
 
                         UpdateToStorage(msg.Properties["balance"].ToString(), msg.Properties["userName"].ToString());
-
                     }
                     catch (Exception)
                     {
@@ -116,9 +114,22 @@ namespace WorkerRole
                         msg.Abandon();
                     }     
                 }
+                else if (msg.Properties["action"].ToString() == "delete")
+                {
+                    try
+                    {
+                        Trace.WriteLine("Deleting user: " + msg.Properties["balance"]);
 
+                        msg.Complete();
+                        DeleteFromStorage(msg.Properties["balance"].ToString(), msg.Properties["userName"].ToString());
+                    }
+                    catch (Exception)
+                    {
+                        // Problem, lås upp message i queue
+                        msg.Abandon();
+                    }
+                }
 
-                
             }
         }
 
@@ -179,11 +190,43 @@ namespace WorkerRole
                     table.Execute(insertOrReplaceOperation);
                 }
                 catch (Exception ex)
-                {
-                        
+                {    
                     throw;
                 }
                
+            }
+        }
+
+        private void DeleteFromStorage(string balance, string userName)
+        {
+            //det namn vår table ska ha
+            string tableName = "users";
+
+            //Connection till table storage account
+            CloudStorageAccount account = CloudStorageAccount.Parse(tableConnectionString);
+            //Klient för table storage
+            CloudTableClient tableStorage = account.CreateCloudTableClient();
+            //Hämta en reference till tablen, om inte finns, skapa table
+            CloudTable table = tableStorage.GetTableReference(tableName);
+            table.CreateIfNotExists();
+
+            //HÄMTA RÄTT uSER!
+            // Create a retrieve operation that takes a customer entity.
+            TableOperation retrieveOperation = TableOperation.Retrieve<User>("users", userName);
+
+            // Execute the operation.
+            TableResult retrievedResult = table.Execute(retrieveOperation);
+
+            // Assign the result to a CustomerEntity object.
+            User deleteEntity = (User)retrievedResult.Result;
+
+            // Create the Delete TableOperation.
+            if (deleteEntity != null)
+            {
+                TableOperation deleteOperation = TableOperation.Delete(deleteEntity);
+
+                // Execute the operation.
+                table.Execute(deleteOperation);
             }
         }
     }
