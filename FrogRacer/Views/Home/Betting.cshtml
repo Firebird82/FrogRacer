@@ -42,20 +42,24 @@
                 s = "rowbottom";
             }
             <div class="row row2 @s">
-                <div class="col-md-2">
-                    <br /><br />
-                    @frog.Name
+                <div class="col-md-1">
+                    <br />
+                    @{
+                        int raceTrackNumber = frogLoopCount + 1;
+                    }
+                    <h1>@raceTrackNumber</h1>
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-2">
+                    <br />
+                    @frog.Name
+                    <br /><br />
+                    <input type="text" name="@frogNameList[frogLoopCount]" placeholder="Place your bet here">
+                </div>
+
+                <div class="col-md-6">
                     <img src="~/Content/Images/@frog.ImageName" width="200">
                 </div>
-                               
-                <div class="col-md-2">
-                    <br /><br />
-                    <input type="text" name="@frogNameList[frogLoopCount]" placeholder="Add your bet here">
-                </div>
-                
             </div>
             frogLoopCount++;
         }
