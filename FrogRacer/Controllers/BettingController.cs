@@ -64,11 +64,11 @@ namespace FrogRacer.Controllers
 
                 if (bettedOnWinningFrog == true)
                 {
-                    ViewBag.ResultMessage = "Yay, you have won " + winningSum + " and you now have " + newBalance + " left.";
+                    ViewBag.ResultMessage = "Yay, you have won " + winningSum + " USD and you now have " + newBalance + " USD left.";
                 }
                 else
                 {
-                    ViewBag.ResultMessage = "Oh no, you have lost " + losingSum + " and you now have " + newBalance + " left.";
+                    ViewBag.ResultMessage = "Oh no, you have lost " + losingSum + " USD and you now have " + newBalance + " USD left.";
                 }
 
                 ViewBag.Balance = newBalance;
