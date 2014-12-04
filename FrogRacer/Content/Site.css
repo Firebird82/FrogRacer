@@ -22,3 +22,9 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.row2{
+    border: 5px;
+    border-style:solid;
+    border-color: black;
+}
