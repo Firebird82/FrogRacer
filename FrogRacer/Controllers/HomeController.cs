@@ -33,19 +33,14 @@ namespace FrogRacer.Controllers
             }
             else
             {
-                Session["UserName"] = userName;
-                //string user = (string)Session["UserName"];
-
                 User user = new User(userName);
 
-                //TODO Hämta saldo från Storage start
-
-                //Om användaren inte finns i storage får den 1000
-                if (Session["balance"] != null)
+                if (Session["balance"] != null && userName == (string)Session["UserName"])
                 {
                     user.Balance = (int)Session["balance"];
                 }
-                //Hämta saldo från Storage slut
+
+                Session["UserName"] = userName;
 
                 var nm = NamespaceManager.CreateFromConnectionString(connectionString);
                 QueueDescription qd = new QueueDescription(qname);

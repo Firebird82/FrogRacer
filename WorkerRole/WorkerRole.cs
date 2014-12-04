@@ -121,7 +121,7 @@ namespace WorkerRole
                         Trace.WriteLine("Deleting user: " + msg.Properties["balance"]);
 
                         msg.Complete();
-                        DeleteFromStorage(msg.Properties["balance"].ToString(), msg.Properties["userName"].ToString());
+                        DeleteFromStorage(msg.Properties["userName"].ToString());
                     }
                     catch (Exception)
                     {
@@ -197,7 +197,7 @@ namespace WorkerRole
             }
         }
 
-        private void DeleteFromStorage(string balance, string userName)
+        private void DeleteFromStorage(string userName)
         {
             //det namn vår table ska ha
             string tableName = "users";
