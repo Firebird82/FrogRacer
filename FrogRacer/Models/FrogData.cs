@@ -8,7 +8,6 @@ namespace FrogRacer
 {
     public class FrogData
     {
-        
         public List<Frog> GetFrogList()
         {               
             List<Frog> frogList = new List<Frog>(); 
@@ -38,7 +37,6 @@ namespace FrogRacer
             Random rnd = new Random();
             var randomFrogs = new List<Frog>();
            
-
             for (int i = 0; i < 5; i++)
             {
                 var randomFrog = rnd.Next(0,froglList.Count);
@@ -46,6 +44,7 @@ namespace FrogRacer
                 froglList.Remove(froglList[randomFrog]);
 
             }
+
             return randomFrogs;
         }
     }
