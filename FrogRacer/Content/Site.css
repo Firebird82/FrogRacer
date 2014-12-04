@@ -24,7 +24,20 @@ textarea {
 }
 
 .row2 {
+    border-bottom: 0px;
     border-style: solid;
-    border: 5px;
     border-color: black;
+}
+
+.rowbottom {
+    border-bottom: 2px;
+    border-style: solid;
+    border-color: black;
+}
+.userMessage {
+    text-align: center;
+}
+
+.btn-success {
+    margin-bottom: 10px;  
 }
