@@ -18,7 +18,6 @@ namespace FrogRacer.Controllers
         string connectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
         string qname = "frogracingqueue";
 
-
         public ActionResult Index()
         {
             return View();

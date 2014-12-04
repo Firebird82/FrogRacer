@@ -82,69 +82,46 @@ namespace WorkerRole
 
                 //Ta emot det meddelande som kommer från web role.                
                 BrokeredMessage msg = qc.Receive();
-                //BrokeredMessage updateSaldoMsg = qc.Receive();
 
-                if (msg.Properties["action"].ToString() == "create")
+                //det namn vår table ska ha
+                string tableName = "users";
+                //Connection till table storage account
+                CloudStorageAccount account = CloudStorageAccount.Parse(tableConnectionString);
+                //Klient för table storage
+                CloudTableClient tableStorage = account.CreateCloudTableClient();
+                //Hämta en reference till tablen, om inte finns, skapa table
+                CloudTable table = tableStorage.GetTableReference(tableName);
+                table.CreateIfNotExists();
+
+                try
                 {
-                    try
+                    if (msg.Properties["action"].ToString() == "create")
                     {
-                        Trace.WriteLine("New Signup processed: " + msg.Properties["userName"] + msg.Properties["balance"]);
                         msg.Complete();
 
-                        SaveToStorage(msg.Properties["userName"].ToString());
+                        SaveToStorage(msg.Properties["userName"].ToString(), table);
                     }
-                    catch (Exception)
+                    else if (msg.Properties["action"].ToString() == "update")
                     {
-                        // Problem, lås upp message i queue
-                        msg.Abandon();
-                    }
-                }
-                else if (msg.Properties["action"].ToString() == "update")
-                {
-                    try
-                    {
-                        Trace.WriteLine("New balance processed: " + msg.Properties["balance"]);
                         msg.Complete();
 
-                        UpdateToStorage(msg.Properties["balance"].ToString(), msg.Properties["userName"].ToString());
+                        UpdateToStorage(msg.Properties["balance"].ToString(), msg.Properties["userName"].ToString(), table);
                     }
-                    catch (Exception)
+                    else if (msg.Properties["action"].ToString() == "delete")
                     {
-                        // Problem, lås upp message i queue
-                        msg.Abandon();
-                    }     
-                }
-                else if (msg.Properties["action"].ToString() == "delete")
-                {
-                    try
-                    {
-                        Trace.WriteLine("Deleting user: " + msg.Properties["balance"]);
-
                         msg.Complete();
-                        DeleteFromStorage(msg.Properties["userName"].ToString());
-                    }
-                    catch (Exception)
-                    {
-                        // Problem, lås upp message i queue
-                        msg.Abandon();
+                        DeleteFromStorage(msg.Properties["userName"].ToString(), table);
                     }
                 }
-
+                catch (Exception)
+                {
+                    msg.Abandon();
+                }
             }
         }
 
-        private void SaveToStorage(string username)
+        private void SaveToStorage(string username, CloudTable table)
         {
-            //det namn vår table ska ha
-            string tableName = "users";
-            //Connection till table storage account
-            CloudStorageAccount account = CloudStorageAccount.Parse(tableConnectionString);
-            //Klient för table storage
-            CloudTableClient tableStorage = account.CreateCloudTableClient();
-            //Hämta en reference till tablen, om inte finns, skapa table
-            CloudTable table = tableStorage.GetTableReference(tableName);
-            table.CreateIfNotExists();
-
             //Skapar den entitet som ska in i storage
             User user = new User(username);           
             user.UserName = username;
@@ -154,20 +131,8 @@ namespace WorkerRole
             table.Execute(insertOperation);
         }
 
-        private void UpdateToStorage(string balance, string userName)
+        private void UpdateToStorage(string balance, string userName, CloudTable table)
         {
-            //det namn vår table ska ha
-            string tableName = "users";
-
-            //Connection till table storage account
-            CloudStorageAccount account = CloudStorageAccount.Parse(tableConnectionString);
-            //Klient för table storage
-            CloudTableClient tableStorage = account.CreateCloudTableClient();
-            //Hämta en reference till tablen, om inte finns, skapa table
-            CloudTable table = tableStorage.GetTableReference(tableName);
-            table.CreateIfNotExists();
-            
-            //HÄMTA RÄTT uSER!
             // Create a retrieve operation that takes a customer entity.
             TableOperation retrieveOperation = TableOperation.Retrieve<User>("users",userName);
             
@@ -197,20 +162,8 @@ namespace WorkerRole
             }
         }
 
-        private void DeleteFromStorage(string userName)
+        private void DeleteFromStorage(string userName, CloudTable table)
         {
-            //det namn vår table ska ha
-            string tableName = "users";
-
-            //Connection till table storage account
-            CloudStorageAccount account = CloudStorageAccount.Parse(tableConnectionString);
-            //Klient för table storage
-            CloudTableClient tableStorage = account.CreateCloudTableClient();
-            //Hämta en reference till tablen, om inte finns, skapa table
-            CloudTable table = tableStorage.GetTableReference(tableName);
-            table.CreateIfNotExists();
-
-            //HÄMTA RÄTT uSER!
             // Create a retrieve operation that takes a customer entity.
             TableOperation retrieveOperation = TableOperation.Retrieve<User>("users", userName);
 
