@@ -70,6 +70,8 @@ namespace FrogRacer.Controllers
                 {
                     ViewBag.ResultMessage = "Oh no, you have lost " + losingSum + " and you now have " + newBalance + " left.";
                 }
+
+                ViewBag.Balance = newBalance;
             }
 
             else
@@ -106,7 +108,7 @@ namespace FrogRacer.Controllers
             qc.Send(msg);
             //Storage - Slut
 
-            return View("Result", winnerFrog);
+            return View("Result",winnerFrog);
         }
     }
 }
